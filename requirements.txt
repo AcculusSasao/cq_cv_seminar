@@ -1,0 +1,6 @@
+pysimpleguiweb
+htmlparser
+remi
+opencv-python
+tflite_runtime
+pyzbar
