@@ -30,6 +30,23 @@ def draw_results(img, keypoints, th=0.1, b_draw_numbers=True,
             cv2.putText(img, str(kidx), (int(x+d), int(y+d)), fontFace, fontScale, (200,200,200), thickness)
             cv2.putText(img, str(kidx), (int(x), int(y)), fontFace, fontScale, (20,20,20), thickness)
 
+def judge_raise_hands_and_draw(img, keypoints, th=0.1,
+                               fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.8, thickness=2):
+    lrs = ('Left', 'Right')
+    shoulder_indices = (5, 6)
+    wrist_indices = (9, 10)
+    # loop for left, right
+    for lr, shoulder_index, wrist_index in zip(lrs, shoulder_indices, wrist_indices):
+        if keypoints[shoulder_index][2] < th or keypoints[wrist_index][2] < th:
+            continue
+        shoulder_y = keypoints[shoulder_index][1]
+        wrist_y = keypoints[wrist_index][1]
+        if shoulder_y > wrist_y:
+            msg = lr + ' hand raised !'
+            print(msg)
+            x, y = keypoints[wrist_index][:2]
+            cv2.putText(img, msg, (int(x), int(y)), fontFace, fontScale, (0,255,255), thickness)
+
 if __name__ == '__main__':
     title = 'humanpose'
     parser = argparse.ArgumentParser()
@@ -106,6 +123,7 @@ if __name__ == '__main__':
             y = y * input_shape[1] / scale - offset[0]
             keypoints.append([x, y, s])
         draw_results(frame, keypoints)
+        judge_raise_hands_and_draw(frame, keypoints)
         
         # show result
         tm.draw(frame)
