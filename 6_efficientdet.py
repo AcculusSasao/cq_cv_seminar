@@ -16,6 +16,8 @@ def post_process(bboxes, confs, class_ids, input_shape, scale, offset, threshold
     for bbox, conf, class_id in zip(bboxes, confs, class_ids):
         if conf < threshold:
             continue
+        if class_id >= len(category):
+            continue
         # bbox: ymin xmin ymax xmax
         y0, x0, y1, x1 = bbox
         y0 = y0 * input_height / scale - offset[0]
