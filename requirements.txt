@@ -4,3 +4,4 @@ remi
 opencv-python
 tflite_runtime
 pyzbar
+scipy
